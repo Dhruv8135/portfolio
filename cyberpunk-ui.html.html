@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cyberpunk Character UI</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#0b0b12;
+color:#00f5ff;
+overflow:hidden;
+}
+
+#ui{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:420px;
+background:rgba(10,10,20,0.7);
+border:1px solid #00f5ff;
+padding:25px;
+box-shadow:0 0 20px #00f5ff;
+}
+
+h1{color:#ff007a;margin:0 0 10px}
+
+.bar{height:10px;background:#222;border:1px solid #00f5ff;margin-top:5px}
+.fill{height:100%;background:#00f5ff}
+.energy{background:#ff007a}
+.cyber{background:#7b2eff}
+
+.slide{display:none}
+.active{display:block}
+
+.item{border:1px solid #00f5ff;padding:6px;margin:8px 0}
+
+button{margin-top:15px;padding:8px 14px;background:#ff007a;color:white;border:none;cursor:pointer}
+</style>
+</head>
+
+<body>
+
+<div id="ui">
+
+<div id="screen1" class="slide active">
+<h1>VEX‑09</h1>
+<div>Class: Cyber Operative</div>
+<div>Level: 27</div>
+
+<div>Health<div class="bar"><div class="fill" style="width:85%"></div></div></div>
+<div>Energy<div class="bar"><div class="fill energy" style="width:60%"></div></div></div>
+<div>Cyber Power<div class="bar"><div class="fill cyber" style="width:70%"></div></div></div>
+
+<button onclick="nextSlide()">Equipment →</button>
+</div>
+
+<div id="screen2" class="slide">
+<h1>Equipment</h1>
+<div class="item">Weapon: Plasma Katana</div>
+<div class="item">Sidearm: Smart Pistol</div>
+<div class="item">Armor: Nano Suit</div>
+<div class="item">Implant: Neural Booster</div>
+<div class="item">Implant: Reflex Chip</div>
+<button onclick="prevSlide()">← Back</button>
+</div>
+
+</div>
+
+<script>
+function nextSlide(){
+document.getElementById("screen1").classList.remove("active");
+document.getElementById("screen2").classList.add("active");
+}
+
+function prevSlide(){
+document.getElementById("screen2").classList.remove("active");
+document.getElementById("screen1").classList.add("active");
+}
+
+/* THREE JS BACKGROUND */
+
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+const renderer=new THREE.WebGLRenderer({alpha:true});
+renderer.setSize(window.innerWidth,window.innerHeight);
+document.body.appendChild(renderer.domElement);
+camera.position.z=5;
+
+const geometry=new THREE.BufferGeometry();
+const count=600;
+const positions=new Float32Array(count*3);
+
+for(let i=0;i<count;i++){
+positions[i*3]=(Math.random()-0.5)*20;
+positions[i*3+1]=(Math.random()-0.5)*20;
+positions[i*3+2]=(Math.random()-0.5)*20;
+}
+
+geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
+
+const material=new THREE.PointsMaterial({color:0x00f5ff,size:0.05});
+const particles=new THREE.Points(geometry,material);
+scene.add(particles);
+
+function animate(){
+requestAnimationFrame(animate);
+particles.rotation.y+=0.0008;
+particles.rotation.x+=0.0004;
+renderer.render(scene,camera);
+}
+animate();
+</script>
+
+</body>
+</html>
